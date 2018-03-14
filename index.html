@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <header>
+  <header id="header">
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
@@ -23,9 +23,11 @@
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>
+        <label for="neighborhoods-select">Neighborhood</label>
         <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
+        <label for="cuisines-select">Cuisine</label>
         <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
