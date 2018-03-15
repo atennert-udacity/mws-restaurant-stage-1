@@ -75,6 +75,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
  */
 fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.getElementById('restaurant-hours');
+  const fragment = document.createDocumentFragment();
   for (let key in operatingHours) {
     const row = document.createElement('tr');
 
@@ -83,11 +84,19 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
     row.appendChild(day);
 
     const time = document.createElement('td');
-    time.innerHTML = operatingHours[key];
+
+    // putting times in seperate elements for design-purposes
+    operatingHours[key].split(',').map((time) => {
+      const timeContainer = document.createElement('p');
+      timeContainer.innerHTML = time;
+      return timeContainer;
+    }).forEach((timeContainer) => time.appendChild(timeContainer));
+
     row.appendChild(time);
 
-    hours.appendChild(row);
+    fragment.appendChild(row);
   }
+  hours.appendChild(fragment);
 }
 
 /**
