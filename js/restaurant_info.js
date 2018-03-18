@@ -55,12 +55,10 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
-  const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+
+  fillRestaurantImages(restaurant);
 
   // fill operating hours
   if (restaurant.operating_hours) {
@@ -68,6 +66,32 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   }
   // fill reviews
   fillReviewsHTML();
+}
+
+/*
+ * create source tags and image tag and add them to the restaurant picture.
+ */
+fillRestaurantImages = (restaurant = self.restaurant) => {
+  const imageName = DBHelper.imageUrlForRestaurant(restaurant);
+
+  const smallSource = document.createElement('source');
+  smallSource.srcset = imageName.replace('.', '-200.');
+  smallSource.media = '(max-width: 200px)';
+
+  const mediumSource = document.createElement('source');
+  mediumSource.srcset = imageName.replace('.', '-400.');
+  mediumSource.media = '(max-width: 400px)';
+
+  const image = document.createElement('img');
+  image.id = 'restaurant-img';
+  image.classList.add('restaurant-img');
+  image.alt = `image of restaurant ${restaurant.name}`;
+  image.src = imageName;
+
+  const picture = document.getElementById('restaurant__image-container');
+  picture.appendChild(smallSource);
+  picture.appendChild(mediumSource);
+  picture.appendChild(image);
 }
 
 /**
@@ -87,7 +111,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 
     // putting times in seperate elements for design-purposes
     operatingHours[key].split(',').map((time) => {
-      const timeContainer = document.createElement('p');
+      const timeContainer = document.createElement('time');
       timeContainer.innerHTML = time;
       return timeContainer;
     }).forEach((timeContainer) => time.appendChild(timeContainer));
@@ -126,20 +150,26 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
+  li.classList.add('review');
+
   const name = document.createElement('p');
   name.innerHTML = review.name;
+  name.classList.add('review__name')
   li.appendChild(name);
 
-  const date = document.createElement('p');
+  const date = document.createElement('time');
   date.innerHTML = review.date;
+  date.classList.add('review__date');
   li.appendChild(date);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
+  rating.classList.add('review__rating');
   li.appendChild(rating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
+  comments.classList.add('review__comment');
   li.appendChild(comments);
 
   return li;
