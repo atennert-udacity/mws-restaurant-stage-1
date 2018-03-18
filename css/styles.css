@@ -201,7 +201,6 @@ nav h1 a {
 }
 #restaurants-list .restaurant-img {
   display: none;
-  background-color: #ccc;
   margin: 0;
   width: 100%;
 }
@@ -215,9 +214,11 @@ nav h1 a {
   text-transform: uppercase;
   margin-bottom: .2em;
 }
+#restaurants-list address,
 #restaurants-list p {
   margin: 0;
   font-size: 1.2em;
+  font-style: normal;
   text-align: center;
 }
 #restaurants-list li a {
@@ -342,7 +343,7 @@ nav h1 a {
 }
 .review__rating {
   grid-area: review-rating;
-  justify-self: flex-start;
+  justify-self: start;
   margin: .2em 1em 0;
   padding: .2em .5em .1em;
   border-radius: .4em;
@@ -374,24 +375,38 @@ nav h1 a {
   /* ====================== Restaurant list ====================== */
   #restaurants-list li {
     grid-template-columns: 45% 53%;
-    grid-template-rows: 0fr 0fr 1fr auto;
-    grid-column-gap: 2%;
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      "list-item-image list-item-name"
+      "list-item-image list-item-neighborhood"
+      "list-item-image list-item-address"
+      "list-item-details list-item-details";
+    grid-gap: 2%;
     justify-items: start;
+    align-items: start;
   }
   #restaurants-list .restaurant-img {
+    grid-area: list-item-image;
     display: block;
-    grid-row-end: span 3;
   }
   #restaurants-list li h1 {
+    grid-area: list-item-name;
     text-align: start;
     font-size: 1.5em;
   }
+  #restaurants-list address,
   #restaurants-list p {
     text-align: start;
     font-size: 1.1em;
   }
+  #restaurants-list address {
+    grid-area: list-item-address;
+  }
+  #restaurants-list p {
+    grid-area: list-item-neighborhood;
+  }
   #restaurants-list li a {
-    grid-column-end: span 2;
+    grid-area: list-item-details;
     justify-self: center;
   }
 }
@@ -420,8 +435,12 @@ nav h1 a {
   }
 
   /* ====================== Restaurant list ====================== */
-  #restaurants-list .restaurant-img {
-    grid-row-end: span 4;
+  #restaurants-list li {
+    grid-template-areas:
+      "list-item-image list-item-name"
+      "list-item-image list-item-neighborhood"
+      "list-item-image list-item-address"
+      "list-item-image list-item-details";
   }
 
   #restaurants-list li a {
@@ -496,7 +515,13 @@ nav h1 a {
   #restaurants-list li {
     justify-items: center;
     grid-template-columns: 1fr;
-    grid-template-rows: 0fr 1fr 1fr 1fr auto;
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+      "list-item-image"
+      "list-item-name"
+      "list-item-neighborhood"
+      "list-item-address"
+      "list-item-details";
     border: 2px solid #ccc;
   }
   #restaurants-list li h1 {

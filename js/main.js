@@ -1,8 +1,8 @@
 let restaurants,
   neighborhoods,
-  cuisines
-var map
-var markers = []
+  cuisines;
+var map;
+var markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -126,9 +126,11 @@ resetRestaurants = (restaurants) => {
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
+  const fragment = document.createDocumentFragment();
   restaurants.forEach(restaurant => {
-    ul.append(createRestaurantHTML(restaurant));
+    fragment.append(createRestaurantHTML(restaurant));
   });
+  ul.append(fragment);
   addMarkersToMap();
 }
 
@@ -138,10 +140,10 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
-  const image = document.createElement('img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  let picture = document.createElement('picture');
+  fillRestaurantImages(restaurant, picture);
+  picture.className = 'restaurant-img';
+  li.append(picture);
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
@@ -151,16 +153,40 @@ createRestaurantHTML = (restaurant) => {
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
 
-  const address = document.createElement('p');
+  const address = document.createElement('address');
   address.innerHTML = restaurant.address;
   li.append(address);
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  li.append(more)
+  li.append(more);
 
-  return li
+  return li;
+}
+
+/*
+ * Create source tags and image tag and add them to the restaurant picture.
+ */
+fillRestaurantImages = (restaurant, picture) => {
+  const imageName = DBHelper.imageUrlForRestaurant(restaurant);
+
+  const smallSource = document.createElement('source');
+  smallSource.srcset = imageName.replace('.', '-200.');
+  smallSource.media = '(max-width: 200px)';
+
+  const mediumSource = document.createElement('source');
+  mediumSource.srcset = imageName.replace('.', '-400.');
+  mediumSource.media = '(max-width: 400px)';
+
+  const image = document.createElement('img');
+  image.classList.add('restaurant-img');
+  image.alt = `image of restaurant ${restaurant.name}`;
+  image.src = imageName;
+
+  picture.appendChild(smallSource);
+  picture.appendChild(mediumSource);
+  picture.appendChild(image);
 }
 
 /**
