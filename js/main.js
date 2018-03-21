@@ -8,6 +8,7 @@ var markers = [];
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
+  registerServiceWorker();
   fetchNeighborhoods();
   fetchCuisines();
 });
@@ -24,7 +25,7 @@ fetchNeighborhoods = () => {
       fillNeighborhoodsHTML();
     }
   });
-}
+};
 
 /**
  * Set neighborhoods HTML.
@@ -37,7 +38,7 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     option.value = neighborhood;
     select.append(option);
   });
-}
+};
 
 /**
  * Fetch all cuisines and set their HTML.
@@ -51,7 +52,7 @@ fetchCuisines = () => {
       fillCuisinesHTML();
     }
   });
-}
+};
 
 /**
  * Set cuisines HTML.
@@ -65,7 +66,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
     option.value = cuisine;
     select.append(option);
   });
-}
+};
 
 /**
  * Initialize Google map, called from HTML.
@@ -81,7 +82,7 @@ window.initMap = () => {
     scrollwheel: false
   });
   updateRestaurants();
-}
+};
 
 /**
  * Update page and map for current restaurants.
@@ -104,7 +105,7 @@ updateRestaurants = () => {
       fillRestaurantsHTML();
     }
   })
-}
+};
 
 /**
  * Clear current restaurants, their HTML and remove their map markers.
@@ -119,7 +120,7 @@ resetRestaurants = (restaurants) => {
   self.markers.forEach(m => m.setMap(null));
   self.markers = [];
   self.restaurants = restaurants;
-}
+};
 
 /**
  * Create all restaurants HTML and add them to the webpage.
@@ -132,7 +133,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   });
   ul.append(fragment);
   addMarkersToMap();
-}
+};
 
 /**
  * Create restaurant HTML.
@@ -163,7 +164,7 @@ createRestaurantHTML = (restaurant) => {
   li.append(more);
 
   return li;
-}
+};
 
 /*
  * Create source tags and image tag and add them to the restaurant picture.
@@ -187,7 +188,7 @@ fillRestaurantImages = (restaurant, picture) => {
   picture.appendChild(smallSource);
   picture.appendChild(mediumSource);
   picture.appendChild(image);
-}
+};
 
 /**
  * Add markers for current restaurants to the map.
@@ -201,4 +202,17 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
-}
+};
+
+/**
+ * Register the service worker.
+ */
+registerServiceWorker = () => {
+  if (!navigator.serviceWorker) {
+    // ServiceWorker is not available
+    return;
+  }
+
+  navigator.serviceWorker.register('/sw.js')
+    .then(() => console.log('installed ServiceWorker'));
+};
