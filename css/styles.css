@@ -10,12 +10,20 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+
 body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 16px;
 	color: #333;
 	line-height: 1.5;
   background-color: #fdfdfd;
+  min-height: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 ul, li {
@@ -60,8 +68,8 @@ section {
 }
 
 #maincontent {
+  flex-grow: 1;
   background-color: #f3f3f3;
-  min-height: 100%;
 }
 
 #footer {
