@@ -17,8 +17,7 @@ self.addEventListener('install', function(event) {
         '/js/main.js',
         '/js/dbhelper.js',
         '/js/restaurant_info.js',
-        '/css/styles.css',
-        '/data/restaurants.json'
+        '/css/styles.css'
       ]);
     })
   );
@@ -60,7 +59,7 @@ self.addEventListener('fetch', function(event) {
   }
 
   event.respondWith(
-    caches.match(event.request).then(function(response) {
+    caches.match(requestUrl.pathname).then(function(response) {
       return response || fetch(event.request);
     })
   );
