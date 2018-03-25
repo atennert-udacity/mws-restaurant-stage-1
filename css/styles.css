@@ -83,6 +83,21 @@ section {
 }
 
 /* ====================== Navigation ====================== */
+.skip-link {
+  position: absolute;
+  top: -3em;
+  left: 0;
+  background: #f18200;
+  color: #fff;
+  padding: .3em;
+  z-index: 2;
+}
+
+.skip-link:focus {
+  top: 0;
+  color: #fff;
+}
+
 header {
   position: sticky;
   top: 0;
