@@ -55,12 +55,14 @@ fetchRestaurantFromURL = (callback) => {
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
+  name.setAttribute('aria-label', `Restaurant: ${restaurant.name}`);
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+  cuisine.setAttribute('aria-label', `Cuisine: ${restaurant.cuisine_type}`);
 
   fillRestaurantImages(restaurant);
 

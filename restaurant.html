@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<head lang="en">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Normalize.css for better cross-browser consistency -->
@@ -35,11 +35,11 @@
     <section id="restaurant-container">
       <!-- Beginning map -->
       <!-- moved the map container into the restaurant container, to use it in grid placement -->
-      <section id="map-container">
+      <section id="map-container" aria-hidden="true">
         <div id="map"></div>
       </section>
       <!-- use positioned element to avoid scrolling content under the sticky header -->
-      <div id="skip-target"></div>
+      <div id="skip-target" aria-hidden="true"></div>
       <!-- End map -->
       <h1 id="restaurant-name"></h1>
       <picture id="restaurant__image-container">

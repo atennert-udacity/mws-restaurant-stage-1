@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<head lang="en">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
@@ -16,14 +16,14 @@
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
-  </header>
+  </header> 
 
   <main id="maincontent">
-    <section id="map-container">
+    <section id="map-container" aria-hidden="true">
       <div id="map"></div>
     </section>
     <!-- use positioned element to avoid scrolling content under the sticky header -->
-    <div id="skip-target"></div>
+    <div id="skip-target" aria-hidden="true"></div>
     <section>
       <div id="filter-options" class="filter-options">
         <h2>Filter Results</h2>
