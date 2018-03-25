@@ -82,7 +82,7 @@ section {
   text-transform: uppercase;
 }
 
-/* ====================== Navigation ====================== */
+/* ====================== skip link for skipping navigation and map ====================== */
 .skip-link {
   position: absolute;
   top: -3em;
@@ -98,6 +98,16 @@ section {
   color: #fff;
 }
 
+#skip-target {
+  position: relative;
+  top: -5em;
+}
+
+.inside #skip-target {
+  top: -8em;
+}
+
+/* ====================== Navigation ====================== */
 header {
   position: sticky;
   top: 0;
@@ -225,7 +235,7 @@ nav h1 a {
   color: #f18200;
   font-family: Arial,sans-serif;
   font-size: 1.6em;
-  font-weight: 200;
+  font-weight: 300;
   letter-spacing: 0;
   text-align: center;
   text-transform: uppercase;
@@ -264,7 +274,7 @@ nav h1 a {
   color: #f18200;
   font-family: Arial,sans-serif;
   font-size: 1.6em;
-  font-weight: 200;
+  font-weight: 300;
   letter-spacing: 0;
   margin: 15px 20px;
   text-transform: uppercase;
@@ -485,10 +495,14 @@ nav h1 a {
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "restaurant-map restaurant-map"
+      "skip-target skip-target"
       "restaurant-name restaurant-name"
       "restaurant-image restaurant-address"
       "restaurant-image restaurant-hours"
       "restaurant-cuisine restaurant-hours";
+  }
+  .inside #skip-target {
+    grid-area: skip-target;
   }
   .inside #map-container {
     grid-area: restaurant-map;
@@ -551,8 +565,9 @@ nav h1 a {
   /* ====================== Restaurant Details ====================== */
   #restaurant-container {
     grid-template-columns: 3fr 2fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto 1fr;
     grid-template-areas:
+      "skip-target skip-target"
       "restaurant-name restaurant-name"
       "restaurant-image restaurant-map"
       "restaurant-image restaurant-address"

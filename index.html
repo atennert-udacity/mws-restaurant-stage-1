@@ -11,7 +11,7 @@
 
 <body>
   <!-- skip navigation and the links in the map -->
-  <a href="#filter-options" class="skip-link">Skip to main content</a>
+  <a href="#skip-target" class="skip-link">Skip to main content</a>
   <header id="header">
     <nav>
       <h1><a href="/">Restaurant Reviews</a></h1>
@@ -22,6 +22,8 @@
     <section id="map-container">
       <div id="map"></div>
     </section>
+    <!-- use positioned element to avoid scrolling content under the sticky header -->
+    <div id="skip-target"></div>
     <section>
       <div id="filter-options" class="filter-options">
         <h2>Filter Results</h2>
