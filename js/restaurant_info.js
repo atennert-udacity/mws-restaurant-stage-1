@@ -106,6 +106,11 @@ fillRestaurantImages = (restaurant = self.restaurant) => {
 fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => {
   const hours = document.getElementById('restaurant-hours');
   const fragment = document.createDocumentFragment();
+  const caption = document.createElement('caption');
+  caption.textContent = 'Opening hours';
+  caption.className = 'restaurant-hours__caption';
+  fragment.appendChild(caption);
+  
   for (let key in operatingHours) {
     const row = document.createElement('tr');
 
