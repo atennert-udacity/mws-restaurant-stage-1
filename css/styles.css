@@ -85,6 +85,11 @@ section {
   color: #ffb225;
 }
 
+#footer a:hover,
+#footer a:focus {
+  text-decoration: underline;
+}
+
 /* ====================== skip link for skipping navigation and map ====================== */
 .skip-link {
   position: absolute;
@@ -142,7 +147,6 @@ nav h1 a {
 
 nav h1 a:focus,
 nav h1 a:hover {
-  color: #80c9fa;
   font-weight: 400;
 }
 
