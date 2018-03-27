@@ -259,7 +259,12 @@ nav h1 a:focus {
 }
 
 #restaurants-list .restaurant-img {
-  display: none;
+  display: block;
+  margin: 0;
+  width: 60%;
+}
+
+#restaurants-list .restaurant-img img {
   margin: 0;
   width: 100%;
 }
@@ -464,7 +469,7 @@ nav h1 a:focus {
 
   #restaurants-list .restaurant-img {
     grid-area: list-item-image;
-    display: block;
+    width: 100%;
   }
 
   #restaurants-list li h1 {
@@ -516,7 +521,11 @@ nav h1 a:focus {
   /* ====================== Restaurant list ====================== */
   #restaurants-list .restaurant-img {
     justify-self: end;
-    max-width: 20em;
+    /* center image and only show middle part, otherwise it gets too large comapred to the text */
+    max-height: 12em;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -620,7 +629,10 @@ nav h1 a:focus {
 
   #restaurants-list .restaurant-img {
     justify-self: unset;
-    max-width: unset;
+    max-height: unset;
+    overflow: unset;
+    display: block;
+    align-items: unset;
   }
 
   #restaurants-list li h1 {

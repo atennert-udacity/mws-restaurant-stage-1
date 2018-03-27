@@ -184,7 +184,6 @@ fillRestaurantImages = (restaurant, picture) => {
   mediumSource.media = '(max-width: 400px)';
 
   const image = document.createElement('img');
-  image.classList.add('restaurant-img');
   image.alt = `image of restaurant ${restaurant.name}`;
   image.src = imageName;
 
