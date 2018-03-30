@@ -64,8 +64,19 @@ self.addEventListener('fetch', function(event) {
   }
 
   event.respondWith(
-    caches.match(requestUrl.pathname).then(function(response) {
-      return response || fetch(event.request);
+    caches.match(event.request).then((response) => {
+      const requestClone = event.request.clone();
+      return response ||
+        fetch(requestClone)
+          .then((res) => {
+            /** from https://www.sitepoint.com/getting-started-with-service-workers/ */
+            if (res || res.status !== 200 || res.type !== basic) {
+              return res;
+            }
+            const resClone = res.clone();
+            caches.open(staticCacheName).then((cache) => cache.put(event.request));
+            return res;
+          });
     })
   );
 });
