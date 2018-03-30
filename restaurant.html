@@ -21,7 +21,7 @@
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
     <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb" >
+    <ul id="breadcrumb" role="navigation" aria-label="breadcrumb">
       <li><a href="/">Home</a></li>
     </ul>
     <!-- End breadcrumb -->
@@ -36,7 +36,7 @@
       <!-- Beginning map -->
       <!-- moved the map container into the restaurant container, to use it in grid placement -->
       <section id="map-container" aria-hidden="true">
-        <div id="map"></div>
+        <div id="map" role="application" aria-label="map which shows the restaurants location"></div>
       </section>
       <!-- use positioned element to avoid scrolling content under the sticky header -->
       <div id="skip-target" aria-hidden="true"></div>
