@@ -91,13 +91,16 @@ fillRestaurantImages = (restaurant = self.restaurant) => {
   const image = document.createElement('img');
   image.id = 'restaurant-img';
   image.classList.add('restaurant-img');
-  image.alt = `image of restaurant ${restaurant.name}`;
+  image.alt = restaurant.photo_title;
   image.src = imageName;
 
-  const picture = document.getElementById('restaurant__image-container');
+  const picture = document.querySelector('#restaurant__image-container > picture');
   picture.appendChild(smallSource);
   picture.appendChild(mediumSource);
   picture.appendChild(image);
+
+  const imageCaption = document.getElementById('restaurant__image-caption');
+  imageCaption.textContent = restaurant.photo_title;
 }
 
 /**

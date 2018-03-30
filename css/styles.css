@@ -264,6 +264,15 @@ nav h1 a:focus {
   width: 60%;
 }
 
+.restaurant__image-caption {
+  white-space: nowrap;
+  text-align: center;
+  font-size: .9em;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #restaurants-list .restaurant-img img {
   margin: 0;
   width: 100%;
@@ -322,6 +331,17 @@ nav h1 a:focus {
   display: block;
   border-top-left-radius: 1em;
   width: 100%;
+}
+
+#restaurant__image-caption {
+  background-color: #ddd;
+  white-space: nowrap;
+  text-align: center;
+  font-style: italic;
+  font-size: .9em;
+  padding: 0 1em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #restaurant-address {
@@ -521,6 +541,9 @@ nav h1 a:focus {
   /* ====================== Restaurant list ====================== */
   #restaurants-list .restaurant-img {
     justify-self: end;
+  }
+
+  #restaurants-list .restaurant-img picture {
     /* center image and only show middle part, otherwise it gets too large comapred to the text */
     max-height: 12em;
     overflow: hidden;
@@ -629,11 +652,16 @@ nav h1 a:focus {
 
   #restaurants-list .restaurant-img {
     justify-self: unset;
+  }
+
+  #restaurants-list .restaurant-img picture {
+    /* center image and only show middle part, otherwise it gets too large comapred to the text */
     max-height: unset;
     overflow: unset;
     display: block;
     align-items: unset;
   }
+
 
   #restaurants-list li h1 {
     text-align: center;

@@ -36,7 +36,7 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     const option = document.createElement('option');
     option.innerHTML = neighborhood;
     option.value = neighborhood;
-    select.append(option);
+    select.appendChild(option);
   });
 };
 
@@ -64,7 +64,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
     const option = document.createElement('option');
     option.innerHTML = cuisine;
     option.value = cuisine;
-    select.append(option);
+    select.appendChild(option);
   });
 };
 
@@ -133,9 +133,9 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
   const fragment = document.createDocumentFragment();
   restaurants.forEach(restaurant => {
-    fragment.append(createRestaurantHTML(restaurant));
+    fragment.appendChild(createRestaurantHTML(restaurant));
   });
-  ul.append(fragment);
+  ul.appendChild(fragment);
   addMarkersToMap();
 };
 
@@ -145,26 +145,32 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+  const figure = document.createElement('figure');
+  const caption = document.createElement('figcaption');
   const picture = document.createElement('picture');
+  caption.className = 'restaurant__image-caption';
+  caption.textContent = restaurant.photo_title;
   fillRestaurantImages(restaurant, picture);
-  picture.className = 'restaurant-img';
-  li.append(picture);
+  figure.className = 'restaurant-img';
+  figure.appendChild(picture);
+  figure.appendChild(caption);
+  li.appendChild(figure);
 
   const name = document.createElement('h1');
   const more = document.createElement('a');
   more.href = DBHelper.urlForRestaurant(restaurant);
   more.setAttribute('aria-label', `Restaurant ${restaurant.name}`);
   more.textContent = restaurant.name;
-  name.append(more);
-  li.append(name);
+  name.appendChild(more);
+  li.appendChild(name);
 
   const neighborhood = document.createElement('p');
   neighborhood.textContent = restaurant.neighborhood;
-  li.append(neighborhood);
+  li.appendChild(neighborhood);
 
   const address = document.createElement('address');
   address.textContent = restaurant.address;
-  li.append(address);
+  li.appendChild(address);
 
   return li;
 };
@@ -184,7 +190,7 @@ fillRestaurantImages = (restaurant, picture) => {
   mediumSource.media = '(max-width: 400px)';
 
   const image = document.createElement('img');
-  image.alt = `image of restaurant ${restaurant.name}`;
+  image.alt = restaurant.photo_title;
   image.src = imageName;
 
   picture.appendChild(smallSource);
