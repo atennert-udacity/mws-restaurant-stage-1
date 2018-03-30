@@ -1,3 +1,7 @@
+/**
+ * This file is based on the Service worker from the wittr-project.
+ */
+
 const staticCacheName = 'atennert-restaurant-v1';
 const contentImgsCache = 'atennert-restaurant-content-imgs';
 const allCaches = [
