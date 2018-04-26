@@ -28,6 +28,7 @@ class DBHelper {
           } else {
             restaurant.photograph = 'no-img.svg';
           }
+          restaurant.photo_title = `${restaurant.name} restaurant - ${restaurant.neighborhood}`;
         });
         callback(null, restaurants);
       } else { // Oops!. Got an error from server.
