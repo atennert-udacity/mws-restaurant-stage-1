@@ -98,7 +98,7 @@ fillRestaurantImages = (restaurant = self.restaurant) => {
   image.id = 'restaurant-img';
   image.classList.add('restaurant-img');
   image.alt = restaurant.photo_title;
-  image.src = imageName;
+  image.src = imageName.replace('.', '-orig.');
 
   picture.appendChild(image);
 

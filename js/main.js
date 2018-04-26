@@ -198,7 +198,7 @@ fillRestaurantImages = (restaurant, picture) => {
 
   const image = document.createElement('img');
   image.alt = restaurant.photo_title;
-  image.src = imageName;
+  image.src = imageName.replace('.', '-orig.');
 
   picture.appendChild(image);
 };
