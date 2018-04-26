@@ -150,11 +150,13 @@ createRestaurantHTML = (restaurant) => {
   const picture = document.createElement('picture');
   caption.className = 'restaurant__image-caption';
   caption.textContent = restaurant.photo_title;
-  fillRestaurantImages(restaurant, picture);
-  figure.className = 'restaurant-img';
-  figure.appendChild(picture);
-  figure.appendChild(caption);
-  li.appendChild(figure);
+  if (restaurant.photograph) {
+    fillRestaurantImages(restaurant, picture);
+    figure.className = 'restaurant-img';
+    figure.appendChild(picture);
+    figure.appendChild(caption);
+    li.appendChild(figure);
+  }
 
   const name = document.createElement('h1');
   const more = document.createElement('a');
