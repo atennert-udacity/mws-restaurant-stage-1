@@ -24,9 +24,9 @@ class DBHelper {
         // fix image type
         restaurants.forEach((restaurant) => {
           if (restaurant.photograph) {
-            restaurant.photograph = `${restaurant.photograph}.jpg`
+            restaurant.photograph = `${restaurant.photograph}.jpg`;
           } else {
-            // TODO push replacement image
+            restaurant.photograph = 'no-img.svg';
           }
         });
         callback(null, restaurants);

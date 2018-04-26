@@ -183,20 +183,23 @@ createRestaurantHTML = (restaurant) => {
 fillRestaurantImages = (restaurant, picture) => {
   const imageName = DBHelper.imageUrlForRestaurant(restaurant);
 
-  const smallSource = document.createElement('source');
-  smallSource.srcset = imageName.replace('.', '-200.');
-  smallSource.media = '(max-width: 200px)';
-
-  const mediumSource = document.createElement('source');
-  mediumSource.srcset = imageName.replace('.', '-400.');
-  mediumSource.media = '(max-width: 400px)';
+  if (!imageName.endsWith('.svg')) {
+    const smallSource = document.createElement('source');
+    smallSource.srcset = imageName.replace('.', '-200.');
+    smallSource.media = '(max-width: 200px)';
+  
+    const mediumSource = document.createElement('source');
+    mediumSource.srcset = imageName.replace('.', '-400.');
+    mediumSource.media = '(max-width: 400px)';
+  
+    picture.appendChild(smallSource);
+    picture.appendChild(mediumSource);
+  }
 
   const image = document.createElement('img');
   image.alt = restaurant.photo_title;
   image.src = imageName;
 
-  picture.appendChild(smallSource);
-  picture.appendChild(mediumSource);
   picture.appendChild(image);
 };
 

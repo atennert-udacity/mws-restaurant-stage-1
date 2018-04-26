@@ -79,14 +79,20 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
  */
 fillRestaurantImages = (restaurant = self.restaurant) => {
   const imageName = DBHelper.imageUrlForRestaurant(restaurant);
+  const picture = document.querySelector('#restaurant__image-container > picture');
 
-  const smallSource = document.createElement('source');
-  smallSource.srcset = imageName.replace('.', '-200.');
-  smallSource.media = '(max-width: 200px)';
+  if (!imageName.endsWith('.svg')) {
+    const smallSource = document.createElement('source');
+    smallSource.srcset = imageName.replace('.', '-200.');
+    smallSource.media = '(max-width: 200px)';
 
-  const mediumSource = document.createElement('source');
-  mediumSource.srcset = imageName.replace('.', '-400.');
-  mediumSource.media = '(max-width: 400px)';
+    const mediumSource = document.createElement('source');
+    mediumSource.srcset = imageName.replace('.', '-400.');
+    mediumSource.media = '(max-width: 400px)';
+
+    picture.appendChild(smallSource);
+    picture.appendChild(mediumSource);
+  }
 
   const image = document.createElement('img');
   image.id = 'restaurant-img';
@@ -94,9 +100,6 @@ fillRestaurantImages = (restaurant = self.restaurant) => {
   image.alt = restaurant.photo_title;
   image.src = imageName;
 
-  const picture = document.querySelector('#restaurant__image-container > picture');
-  picture.appendChild(smallSource);
-  picture.appendChild(mediumSource);
   picture.appendChild(image);
 
   const imageCaption = document.getElementById('restaurant__image-caption');
