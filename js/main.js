@@ -1,16 +1,40 @@
 let restaurants,
   neighborhoods,
-  cuisines;
-var map;
-var markers = [];
+  cuisines,
+  map,
+  markers = [];
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  registerServiceWorker();
-  fetchNeighborhoods();
-  fetchCuisines();
+  // prevent Roboto font from loading to save bandwidth
+  // https://stackoverflow.com/questions/25523806/google-maps-v3-prevent-api-from-loading-roboto-font
+  const head = document.getElementsByTagName('head')[0];
+  const insertBefore = head.insertBefore;
+  head.insertBefore = function (newElement, referenceElement) {
+    if (newElement.href && newElement.href.indexOf('//fonts.googleapis.com/css?family=Roboto') > -1) {
+        return;
+    }
+    insertBefore.call(head, newElement, referenceElement);
+  };
+
+  // open DB connection, load restaurants and options and load map markers if necessary.
+  DBHelper.database.then(() => {
+    DBHelper.fetchRestaurants((error, restaurants) => {
+      if (error) {
+        console.error(error);
+      } else {
+        self.restaurants = restaurants;
+        fillRestaurantsHTML();
+      }
+      fetchNeighborhoods();
+      fetchCuisines();
+      if (map) {
+        addMarkersToMap();
+      }
+    });
+  });
 });
 
 /**
@@ -34,7 +58,7 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
   const select = document.getElementById('neighborhoods-select');
   neighborhoods.forEach(neighborhood => {
     const option = document.createElement('option');
-    option.innerHTML = neighborhood;
+    option.textContent = neighborhood;
     option.value = neighborhood;
     select.appendChild(option);
   });
@@ -62,7 +86,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
 
   cuisines.forEach(cuisine => {
     const option = document.createElement('option');
-    option.innerHTML = cuisine;
+    option.textContent = cuisine;
     option.value = cuisine;
     select.appendChild(option);
   });
@@ -85,7 +109,10 @@ window.initMap = () => {
   } catch(error) {
     console.log(error);
   }
-  updateRestaurants();
+  // load map markers if restaurant has been loaded.
+  if (self.restaurants) {
+    addMarkersToMap(self.restaurants);
+  }
 };
 
 /**
@@ -107,6 +134,7 @@ updateRestaurants = () => {
     } else {
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
+      addMarkersToMap();
     }
   })
 };
@@ -121,7 +149,9 @@ resetRestaurants = (restaurants) => {
   ul.innerHTML = '';
 
   // Remove all map markers
-  self.markers.forEach(m => m.setMap(null));
+  if (self.markers) {
+    self.markers.forEach(m => m.setMap(null));
+  }
   self.markers = [];
   self.restaurants = restaurants;
 };
@@ -136,7 +166,6 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
     fragment.appendChild(createRestaurantHTML(restaurant));
   });
   ul.appendChild(fragment);
-  addMarkersToMap();
 };
 
 /**
@@ -150,13 +179,11 @@ createRestaurantHTML = (restaurant) => {
   const picture = document.createElement('picture');
   caption.className = 'restaurant__image-caption';
   caption.textContent = restaurant.photo_title;
-  if (restaurant.photograph) {
-    fillRestaurantImages(restaurant, picture);
-    figure.className = 'restaurant-img';
-    figure.appendChild(picture);
-    figure.appendChild(caption);
-    li.appendChild(figure);
-  }
+  fillRestaurantImages(restaurant, picture);
+  figure.className = 'restaurant-img';
+  figure.appendChild(picture);
+  figure.appendChild(caption);
+  li.appendChild(figure);
 
   const name = document.createElement('h1');
   const more = document.createElement('a');
@@ -187,13 +214,23 @@ fillRestaurantImages = (restaurant, picture) => {
     const smallSource = document.createElement('source');
     smallSource.srcset = imageName.replace('.', '-200.');
     smallSource.media = '(max-width: 200px)';
-  
+
     const mediumSource = document.createElement('source');
-    mediumSource.srcset = imageName.replace('.', '-400.');
-    mediumSource.media = '(max-width: 400px)';
-  
+    mediumSource.srcset = imageName.replace('.', '-320.');
+    mediumSource.media = '(max-width: 320px)';
+
+    const biggerSource = document.createElement('source');
+    biggerSource.srcset = imageName.replace('.', '-420.');
+    biggerSource.media = '(max-width: 420px)';
+
+    const bigSource = document.createElement('source');
+    bigSource.srcset = imageName.replace('.', '-500.');
+    bigSource.media = '(max-width: 500px)';
+
     picture.appendChild(smallSource);
     picture.appendChild(mediumSource);
+    picture.appendChild(biggerSource);
+    picture.appendChild(bigSource);
   }
 
   const image = document.createElement('img');
@@ -206,13 +243,13 @@ fillRestaurantImages = (restaurant, picture) => {
 /**
  * Add markers for current restaurants to the map.
  */
-addMarkersToMap = (restaurants = self.restaurants) => {
+addMarkersToMap = (restaurants = window.restaurants) => {
   restaurants.forEach(restaurant => {
     // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
+    const marker = DBHelper.mapMarkerForRestaurant(restaurant, window.map);
     google.maps.event.addListener(marker, 'click', () => {
       window.location.href = marker.url
     });
-    self.markers.push(marker);
+    markers.push(marker);
   });
 };

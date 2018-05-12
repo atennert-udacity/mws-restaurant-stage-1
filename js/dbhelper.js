@@ -4,23 +4,93 @@
 class DBHelper {
 
   /**
-   * Database URL.
+   * Backend URL.
    * Change this to restaurants.json file location on your server.
    */
-  static get DATABASE_URL() {
+  static get BACKEND_URL() {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
 
+  static get _objectStore() {
+    return 'restaurants';
+  }
+
+  static get database() {
+    if (DBHelper._database) {
+      return Promise.resolve(DBHelper._database);
+    }
+
+    const dbName = 'restaurant-reviews';
+    const dbVersion = 1;
+
+    return new Promise((resolve, reject) => {
+      const openRequest = indexedDB.open(dbName, dbVersion);
+
+      openRequest.onerror = () => reject();
+
+      openRequest.onupgradeneeded = () => {
+        const db = openRequest.result;
+        const store = db.createObjectStore(DBHelper._objectStore, {keyPath: 'id'});
+        store.createIndex('by-id', 'id');
+      };
+
+      openRequest.onsuccess = (event) => {
+        DBHelper._database = openRequest.result;
+        resolve(DBHelper._database);
+      };
+    });
+  }
+
+  static getDbRestaurants(id) {
+    return DBHelper.database
+      .then((db) => {
+        const transaction = db.transaction(DBHelper._objectStore, 'readonly');
+        const store = transaction.objectStore(DBHelper._objectStore);
+        return id ? store.getAll(~~id) : store.getAll();
+      })
+      .then((query) => new Promise((resolve) => {
+        query.onsuccess = () => resolve(query.result.map((dbEntry) => dbEntry.restaurant));
+      }))
+      .catch(() => {
+        console.warn(`encountered database problem when trying to find restaurant ${id}`);
+        return undefined;
+      })
+  }
+
+  static setDbRestaurants(restaurants) {
+    DBHelper.database
+      .then((db) => {
+        const transaction = db.transaction(DBHelper._objectStore, 'readwrite');
+        const store = transaction.objectStore(DBHelper._objectStore);
+        restaurants.forEach((restaurant) => {
+          store.put({id: restaurant.id, restaurant: restaurant});
+        });
+      })
+      .catch(() => {
+        console.warn(`encountered database problem when trying to set restaurants ${restaurants}`);
+      });
+  }
+
   /**
-   * Fetch all restaurants.
+   * Fetch all restaurants. First check the database if the restaurants are already there.
+   * Then make a server request to get updated information.
    */
-  static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const restaurants = JSON.parse(xhr.responseText);
+  static fetchRestaurants(callback, id = '') {
+    let internalCallback = callback;
+    DBHelper.getDbRestaurants(id)
+      .then((restaurants) => {
+        if (restaurants && restaurants.length > 0) {
+          internalCallback(null, restaurants);
+          internalCallback = () => {};
+        }
+      })
+      .then(() => fetch(`${DBHelper.BACKEND_URL}/${id}`))
+      .then((response) => response.json())
+      .then((restaurants) => {
+        if (!Array.isArray(restaurants)) {
+          restaurants = [restaurants];
+        }
         // fix image type
         restaurants.forEach((restaurant) => {
           if (restaurant.photograph) {
@@ -30,13 +100,13 @@ class DBHelper {
           }
           restaurant.photo_title = `${restaurant.name} restaurant - ${restaurant.neighborhood}`;
         });
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+        DBHelper.setDbRestaurants(restaurants);
+        internalCallback(null, restaurants);
+      })
+      .catch((error) => { // Oops!. Got an error from server or with the response
+        const errorText = `Request failed. ${error.message}`;
+        internalCallback(errorText, null);
+      });
   }
 
   /**
@@ -55,7 +125,7 @@ class DBHelper {
           callback('Restaurant does not exist', null);
         }
       }
-    });
+    }, id);
   }
 
   /**
@@ -116,17 +186,14 @@ class DBHelper {
    */
   static fetchNeighborhoods(callback) {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        // Get all neighborhoods from all restaurants
-        const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
+    DBHelper.getDbRestaurants().then((restaurants) => {
+      // Get all neighborhoods from all restaurants
+      const neighborhoods = restaurants.map((restaurant) => restaurant.neighborhood),
         // Remove duplicates from neighborhoods
-        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
-        callback(null, uniqueNeighborhoods);
-      }
-    });
+        uniqueNeighborhoods = neighborhoods.filter((neighborhood, i) => neighborhoods.indexOf(neighborhood) == i);
+      callback(null, uniqueNeighborhoods);
+    })
+    .catch((error) => callback(error, null));
   }
 
   /**
@@ -134,17 +201,14 @@ class DBHelper {
    */
   static fetchCuisines(callback) {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        // Get all cuisines from all restaurants
-        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
+    DBHelper.getDbRestaurants().then((restaurants) => {
+      // Get all cuisines from all restaurants
+      const cuisines = restaurants.map((restaurant) => restaurant.cuisine_type),
         // Remove duplicates from cuisines
-        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
-        callback(null, uniqueCuisines);
-      }
-    });
+        uniqueCuisines = cuisines.filter((cuisine, i) => cuisines.indexOf(cuisine) === i);
+      callback(null, uniqueCuisines);
+    })
+    .catch((error) => callback(error, null));
   }
 
   /**

@@ -2,26 +2,50 @@ let restaurant;
 var map;
 
 /**
+ * Fetch restaurant as soon as the page is loaded.
+ */
+document.addEventListener('DOMContentLoaded', (event) => {
+  // prevent Roboto font from loading to save bandwidth
+  // https://stackoverflow.com/questions/25523806/google-maps-v3-prevent-api-from-loading-roboto-font
+  const head = document.getElementsByTagName('head')[0];
+  const insertBefore = head.insertBefore;
+  head.insertBefore = function (newElement, referenceElement) {
+    if (newElement.href && newElement.href.indexOf('//fonts.googleapis.com/css?family=Roboto') > -1) {
+        return;
+    }
+    insertBefore.call(head, newElement, referenceElement);
+  };
+
+  // open DB, fetch restaurant data and load map if necessary.
+  DBHelper.database.then(() => {
+    fetchRestaurantFromURL((error, restaurant) => {
+      fillBreadcrumb();
+      if (map) {
+        initMap();
+      }
+    });
+  });
+});
+
+/**
  * Initialize Google map, called from HTML.
+ * If restaurant is not loaded the map will be marked as 'to load' for restaurant load handling.
  */
 window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      try {
-        self.map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 16,
-          center: restaurant.latlng,
-          scrollwheel: false
-        });
-        fillBreadcrumb();
-        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-      } catch (error) {
-        console.log(error);
-      }
+  if (self.restaurant) {
+    try {
+      self.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: self.restaurant.latlng,
+        scrollwheel: false
+      });
+    } catch (error) {
+      console.log(error);
     }
-  });
+    DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+  } else {
+    map = true;
+  }
 }
 
 /**
@@ -29,7 +53,7 @@ window.initMap = () => {
  */
 fetchRestaurantFromURL = (callback) => {
   if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
+    callback(null, self.restaurant);
     return;
   }
   const id = getParameterByName('id');
@@ -44,7 +68,7 @@ fetchRestaurantFromURL = (callback) => {
         return;
       }
       fillRestaurantHTML();
-      callback(null, restaurant)
+      callback(null, restaurant);
     });
   }
 }
@@ -54,14 +78,14 @@ fetchRestaurantFromURL = (callback) => {
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
-  name.innerHTML = restaurant.name;
+  name.textContent = restaurant.name;
   name.setAttribute('aria-label', `Restaurant: ${restaurant.name}`);
 
   const address = document.getElementById('restaurant-address');
-  address.innerHTML = restaurant.address;
+  address.textContent = restaurant.address;
 
   const cuisine = document.getElementById('restaurant-cuisine');
-  cuisine.innerHTML = restaurant.cuisine_type;
+  cuisine.textContent = restaurant.cuisine_type;
   cuisine.setAttribute('aria-label', `Cuisine: ${restaurant.cuisine_type}`);
 
   fillRestaurantImages(restaurant);
@@ -82,16 +106,21 @@ fillRestaurantImages = (restaurant = self.restaurant) => {
   const picture = document.querySelector('#restaurant__image-container > picture');
 
   if (!imageName.endsWith('.svg')) {
-    const smallSource = document.createElement('source');
-    smallSource.srcset = imageName.replace('.', '-200.');
-    smallSource.media = '(max-width: 200px)';
-
     const mediumSource = document.createElement('source');
-    mediumSource.srcset = imageName.replace('.', '-400.');
-    mediumSource.media = '(max-width: 400px)';
+    mediumSource.srcset = imageName.replace('.', '-320.');
+    mediumSource.media = '(max-width: 320px)';
 
-    picture.appendChild(smallSource);
+    const biggerSource = document.createElement('source');
+    biggerSource.srcset = imageName.replace('.', '-420.');
+    biggerSource.media = '(max-width: 420px)';
+
+    const bigSource = document.createElement('source');
+    bigSource.srcset = imageName.replace('.', '-500.');
+    bigSource.media = '(max-width: 500px)';
+
     picture.appendChild(mediumSource);
+    picture.appendChild(biggerSource);
+    picture.appendChild(bigSource);
   }
 
   const image = document.createElement('img');
@@ -117,19 +146,21 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   caption.className = 'restaurant-hours__caption';
   fragment.appendChild(caption);
   
-  for (let key in operatingHours) {
-    const row = document.createElement('tr');
+  let row, day, time, timeContainer, key;
+  const keys = Object.keys(operatingHours);
+  for (key of keys) {
+    row = document.createElement('tr');
 
-    const day = document.createElement('td');
-    day.innerHTML = key;
+    day = document.createElement('td');
+    day.textContent = key;
     row.appendChild(day);
 
-    const time = document.createElement('td');
+    time = document.createElement('td');
 
     // putting times in seperate elements for design-purposes
     operatingHours[key].split(',').map((time) => {
-      const timeContainer = document.createElement('time');
-      timeContainer.innerHTML = time;
+      timeContainer = document.createElement('time');
+      timeContainer.textContent = time;
       return timeContainer;
     }).forEach((timeContainer) => time.appendChild(timeContainer));
 
@@ -145,48 +176,52 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
+  const fragment = document.createDocumentFragment();
   const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
+  title.textContent = 'Reviews';
+  fragment.appendChild(title);
 
   if (!reviews) {
     const noReviews = document.createElement('p');
-    noReviews.innerHTML = 'No reviews yet!';
-    container.appendChild(noReviews);
+    noReviews.textContent = 'No reviews yet!';
+    fragment.appendChild(noReviews);
     return;
   }
   const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
+  let review;
+  for (review of reviews) {
     ul.appendChild(createReviewHTML(review));
-  });
-  container.appendChild(ul);
+  }
+  fragment.appendChild(ul);
+  container.appendChild(fragment);
 }
 
 /**
  * Create review HTML and add it to the webpage.
  */
 createReviewHTML = (review) => {
-  const li = document.createElement('li');
-  li.classList.add('review');
+  const li = document.createElement('li'),
+    name = document.createElement('p'),
+    date = document.createElement('time'),
+    rating = document.createElement('p'),
+    comments = document.createElement('p');
 
-  const name = document.createElement('p');
-  name.innerHTML = review.name;
-  name.classList.add('review__name')
+  li.className = 'review';
+
+  name.textContent = review.name;
+  name.className = 'review__name';
   li.appendChild(name);
 
-  const date = document.createElement('time');
-  date.innerHTML = review.date;
-  date.classList.add('review__date');
+  date.textContent = review.date;
+  date.className = 'review__date';
   li.appendChild(date);
 
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  rating.classList.add('review__rating');
+  rating.textContent = `Rating: ${review.rating}`;
+  rating.className = 'review__rating';
   li.appendChild(rating);
 
-  const comments = document.createElement('p');
-  comments.innerHTML = review.comments;
-  comments.classList.add('review__comment');
+  comments.textContent = review.comments;
+  comments.className = 'review__comment';
   li.appendChild(comments);
 
   return li;
@@ -198,7 +233,7 @@ createReviewHTML = (review) => {
 fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
-  li.innerHTML = restaurant.name;
+  li.textContent = restaurant.name;
   breadcrumb.appendChild(li);
 }
 

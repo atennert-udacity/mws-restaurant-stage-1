@@ -1,0 +1,37 @@
+/* ====================== less small layout ====================== */
+@media screen and (min-width: 35em) {
+  /* ====================== Map ====================== */
+  #map {
+    height: 25em;
+  }
+
+  .inside #map {
+    height: 15em;
+  }
+
+  /* ====================== Restaurant Filtering ====================== */
+  .filter-options {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .filter-options h2 {
+    grid-column-end: span 2;
+  }
+
+  .filter-options label {
+    grid-row-start: 2;
+  }
+
+  /* ====================== Restaurant list ====================== */
+  #restaurants-list .restaurant-img {
+    justify-self: end;
+  }
+
+  #restaurants-list .restaurant-img picture {
+    /* center image and only show middle part, otherwise it gets too large comapred to the text */
+    max-height: 12em;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+}

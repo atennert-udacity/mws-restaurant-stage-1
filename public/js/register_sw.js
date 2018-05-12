@@ -1,0 +1,1 @@
+registerServiceWorker=(()=>{navigator.serviceWorker&&navigator.serviceWorker.register("/sw.js").then(()=>console.log("installed ServiceWorker"))}),registerServiceWorker();

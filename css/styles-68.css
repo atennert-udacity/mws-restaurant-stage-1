@@ -1,0 +1,22 @@
+/* ====================== really big layout ====================== */
+@media screen and (min-width: 68em) {
+  /* ====================== Restaurant list ====================== */
+  #restaurants-list {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  /* ====================== Restaurant Details ====================== */
+  #restaurant-container {
+    grid-template-columns: 4fr minmax(max-content, 2fr);
+    grid-template-rows: min-content min-content 13em min-content min-content 1fr;
+  }
+
+  #reviews-list {
+    column-count: 2;
+    column-gap: 1.5em;
+  }
+
+  .review {
+    break-inside: avoid-column;
+  }
+}

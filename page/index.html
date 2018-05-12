@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#252831">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="img/icon-192.png">
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css">
+  <title>Restaurant Reviews</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      color: #333;
+      line-height: 1.5;
+      background-color: #fdfdfd;
+      min-height: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ul, li {
+      color: #333;
+    }
+
+    a {
+      color: #b36100;
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: none;
+    }
+
+    #maincontent {
+      flex-grow: 1;
+      background-color: #f3f3f3;
+    }
+
+    #footer {
+      background-color: #333;
+      color: #ccc;
+      font-size: 1em;
+      letter-spacing: 1px;
+      padding: 25px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    #footer a {
+      color: #ffb225;
+    }
+
+    #footer a:hover,
+    #footer a:focus {
+      text-decoration: underline;
+    }
+
+    /* ====================== skip link for skipping navigation and map ====================== */
+    .skip-link {
+      position: absolute;
+      top: -3em;
+      left: 0;
+      background: #b36100;
+      color: #fff;
+      padding: .3em;
+      z-index: 2;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    #skip-target {
+      position: relative;
+      top: -5em;
+    }
+
+    .inside #skip-target {
+      top: -8em;
+    }
+
+    /* ====================== Navigation ====================== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    nav {
+      /* center content with flex centering */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 5em;
+      background-color: #252831;
+    }
+
+    nav h1 {
+      text-align: center;
+      padding: 0 .5em;
+    }
+
+    nav h1 a {
+      color: #fff;
+      font-size: .9em;
+      font-weight: 300;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+    }
+
+    nav h1 a:focus,
+    nav h1 a:hover {
+      font-weight: 400;
+    }
+
+    nav h1 a:focus {
+      outline: 0;
+      box-shadow: 0 0 0 3px #252831, 0 0 5px 6px #faa645;
+    }
+
+    /* ====================== Map ====================== */
+    #map {
+      height: 16em;
+      width: 100%;
+      background-color: #ccc;
+    }
+
+    /* ====================== Restaurant Filtering ====================== */
+    .filter-options {
+      display: grid;
+      grid-template-columns: 1fr; 
+      grid-gap: .5em;
+      width: 100%;
+      background-color: #054977;
+      align-items: center;
+      padding: .3em .7em .5em;
+    }
+
+    .filter-options h2 {
+      color: white;
+      font-size: 1.2em;
+      font-weight: normal;
+    }
+
+    .filter-options label {
+      color: white;
+      font-size: 1em;
+    }
+
+    .filter-options select {
+      background-color: white;
+      border: 1px solid #fff;
+      font-family: Arial,sans-serif;
+      font-size: 1em;
+      height: 2.5em;
+      min-height: 48px;
+      padding: 0 .4em;
+      position: relative;
+      border-radius: 3px;
+    }
+
+    .filter-options select:focus {
+      outline: 0;
+      box-shadow: 0 0 0 3px #054977, 0 0 5px 6px #faa645;
+    }
+
+    /* ====================== Restaurant Listing ====================== */
+    #restaurants-list {
+      display: grid;
+      background-color: #f3f3f3;
+      list-style: outside none none;
+      padding: 1em 0;
+      text-align: center;
+    }
+
+    #restaurants-list li {
+      display: grid;
+      justify-items: center;
+      background-color: #fff;
+      border-bottom: 2px solid #ccc;
+      font-family: Arial,sans-serif;
+      font-size: .9em;
+      padding: .7em 1em;
+      text-align: left;
+    }
+
+    #restaurants-list li:first-child {
+      border-top: 2px solid #ccc;
+    }
+
+    #restaurants-list .restaurant-img {
+      display: block;
+      width: 60%;
+    }
+
+    .restaurant__image-caption {
+      white-space: nowrap;
+      text-align: center;
+      font-size: .9em;
+      font-style: italic;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #restaurants-list .restaurant-img img {
+      width: 100%;
+    }
+
+    #restaurants-list li h1 {
+      color: #b36100;
+      font-family: Arial,sans-serif;
+      font-size: 1.6em;
+      font-weight: 300;
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: .2em;
+    }
+
+    #restaurants-list li h1 a:focus,
+    #restaurants-list li h1 a:hover {
+      font-weight: 400;
+    }
+
+    #restaurants-list address,
+    #restaurants-list p {
+      font-size: 1.2em;
+      font-style: normal;
+      text-align: center;
+    }
+  </style>
+  <link rel="stylesheet" href="css/styles-29.css" media="screen and (min-width: 29em)">
+  <link rel="stylesheet" href="css/styles-35.css" media="screen and (min-width: 35em)">
+  <link rel="stylesheet" href="css/styles-45.css" media="screen and (min-width: 45em)">
+  <link rel="stylesheet" href="css/styles-54.css" media="screen and (min-width: 54em)">
+  <link rel="stylesheet" href="css/styles-68.css" media="screen and (min-width: 68em)">
+  <link rel="stylesheet" href="css/styles-87.css" media="screen and (min-width: 87em)">
+</head>
+
+<body>
+  <!-- skip navigation and the links in the map -->
+  <a href="#skip-target" class="skip-link">Skip to main content</a>
+  <header id="header">
+    <nav>
+      <h1><a href="/">Restaurant Reviews</a></h1>
+    </nav>
+  </header> 
+
+  <main id="maincontent">
+    <section id="map-container" aria-hidden="true">
+      <div id="map" role="application" aria-label="map which shows the locations of the filtered restaurants"></div>
+    </section>
+    <!-- use positioned element to avoid scrolling content under the sticky header -->
+    <div id="skip-target" aria-hidden="true"></div>
+    <section>
+      <div id="filter-options" class="filter-options">
+        <h2>Filter Results</h2>
+        <label for="neighborhoods-select">Neighborhood</label>
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+          <option value="all">All Neighborhoods</option>
+        </select>
+        <label for="cuisines-select">Cuisine</label>
+        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+          <option value="all">All Cuisines</option>
+        </select>
+      </div>
+      <ul id="restaurants-list"></ul>
+    </section>
+  </main>
+
+  <script src="js/register_sw.js"></script>
+  <script src="js/dbhelper.js"></script>
+  <script src="js/main.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8y7sHdVpkLdBksQR9UDk0me5X_IbgD8g&libraries=places&callback=initMap"></script>
+
+
+  <footer id="footer">
+    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
+
+</body>
+
+</html>

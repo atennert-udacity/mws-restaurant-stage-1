@@ -1,0 +1,85 @@
+/* ====================== big layout ====================== */
+@media screen and (min-width: 54em) {
+  /* ====================== Restaurant list ====================== */
+  #restaurants-list {
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1em;
+    margin: 0 1em;
+  }
+
+  #restaurants-list li {
+    justify-items: center;
+    align-items: start;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+      "list-item-image"
+      "list-item-name"
+      "list-item-neighborhood"
+      "list-item-address"
+      "list-item-details";
+    border: 2px solid #ccc;
+  }
+
+  #restaurants-list .restaurant-img {
+    justify-self: unset;
+  }
+
+  #restaurants-list .restaurant-img picture {
+    /* center image and only show middle part, otherwise it gets too large comapred to the text */
+    max-height: unset;
+    overflow: unset;
+    display: block;
+    align-items: unset;
+  }
+
+
+  #restaurants-list li h1 {
+    text-align: center;
+  }
+
+  #restaurants-list p,
+  #restaurants-list address {
+    text-align: center;
+  }
+
+  /* ====================== Restaurant Details ====================== */
+  #restaurant-container {
+    grid-template-columns: 3fr minmax(max-content, 2fr);
+    grid-template-rows: min-content min-content 9em min-content min-content 1fr;
+    grid-template-areas:
+      "skip-target skip-target"
+      "restaurant-name restaurant-name"
+      "restaurant-image restaurant-map"
+      "restaurant-image restaurant-address"
+      "restaurant-image restaurant-hours"
+      "restaurant-cuisine restaurant-hours";
+    padding: 10px 20px 20px;
+    border-top: 1px solid #fff;
+  }
+
+  .inside #map-container {
+    align-self: stretch;
+    margin: 0 0 1em;
+    border: 1px solid #ddd;
+  }
+
+  .inside #map {
+    height: 100%;
+  }
+
+  #restaurant-name {
+    margin: 15px 0;
+  }
+
+  #restaurant__image-container,
+  #restaurant-cuisine {
+    margin: 0;
+    width: 100%;
+  }
+
+  #restaurant-address,
+  #restaurant-hours {
+    padding: 0;
+  }
+}

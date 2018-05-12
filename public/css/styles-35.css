@@ -1,0 +1,1 @@
+@media screen and (min-width:35em){#map{height:25em}.inside #map{height:15em}.filter-options{grid-template-columns:1fr 1fr}.filter-options h2{grid-column-end:span 2}.filter-options label{grid-row-start:2}#restaurants-list .restaurant-img{justify-self:end}#restaurants-list .restaurant-img picture{max-height:12em;overflow:hidden;display:flex;align-items:center}}
