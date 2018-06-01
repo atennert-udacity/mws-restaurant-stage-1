@@ -25,8 +25,8 @@ gulp.task('scripts', () => {
     .pipe(uglify())
     .pipe(gulp.dest('public/js'));
 
-  gulp.src('./js/sw.js')
-    // .pipe(uglify())
+  gulp.src(['./js/sw.js'])
+    .pipe(uglify())
     .pipe(gulp.dest('public'));
 });
 

@@ -176,6 +176,17 @@ nav h1 a:focus {
   background-color: #ccc;
 }
 
+.map__toggle--container {
+  background-color: #054977;
+  padding: .3em .7em .5em;
+  color: white;
+  font-size: 1em;
+}
+
+.hide {
+  display: none;
+}
+
 .inside #map-container {
   border-bottom: 1px solid #fff;
 }
@@ -238,7 +249,12 @@ nav h1 a:focus {
   border-bottom-right-radius: 1em;
 }
 
-#restaurant-hours {
+#restaurant__is-favorite-container {
+  margin: 0 0 .6em;
+}
+
+#restaurant-hours,
+#restaurant__is-favorite-container {
   padding: 0 20px;
 }
 
@@ -273,7 +289,8 @@ nav h1 a:focus {
   margin: 15px 0;
 }
 
-.review {
+.review,
+.review__form-container {
   background-color: #fff;
   border: 2px solid #f3f3f3;
   display: grid;
@@ -291,8 +308,31 @@ nav h1 a:focus {
   border-bottom-right-radius: 1em;
 }
 
+.review__form-container {
+  grid-template-columns: auto;
+  grid-template-areas:
+    "review-form-header"
+    "review-form";
+}
+
+.review__form {
+  grid-area: review-form;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-areas:
+    "review-form-name-label"
+    "review-form-name"
+    "review-form-rating-label"
+    "review-form-rating"
+    "review-form-comment-label"
+    "review-form-comment"
+    "review-form-submit";
+  margin: 0 1em;
+}
+
 .review__name,
-.review__date {
+.review__date,
+#review__form--header {
   background-color: #333;
 }
 
@@ -320,7 +360,7 @@ nav h1 a:focus {
   padding: .2em .5em .1em;
   border-radius: .4em;
   background-color: #b36100;
-  color: white;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: .1em;
 }
@@ -328,6 +368,63 @@ nav h1 a:focus {
 .review__comment {
   grid-area: review-comment;
   margin: 0 1em;
+}
+
+h2#review__form--header {
+  grid-area: review-form-header;
+  color: #ffb225;
+  padding: 0 .75em 0;
+  font-size: 1.5em;
+  font-weight: 400;
+  margin: 0;
+}
+
+.review__form--name-label {
+  grid-area: review-form-name-label;
+}
+
+.review__form--rating-label {
+  grid-area: review-form-rating-label;
+}
+
+.review__form--comment-label {
+  grid-area: review-form-comment-label;
+}
+
+#review__form--name,
+#review__form--rating,
+#review__form--comment,
+#review__form--submit {
+  border: 1px solid #333;
+  font-size: 1.1em;
+}
+
+#review__form--name {
+  grid-area: review-form-name;
+}
+
+#review__form--rating,
+#review__form--submit {
+  padding: .2em .3em .1em;
+  background-color: #b36100;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  width: 9em;
+}
+
+#review__form--rating {
+  grid-area: review-form-rating;
+}
+
+#review__form--comment {
+  grid-area: review-form-comment;
+}
+
+#review__form--submit {
+  grid-area: review-form-submit;
+  border-radius: .4em;
+  margin-top: .5em;
 }
 
 #restaurant-hours td {
@@ -338,12 +435,16 @@ nav h1 a:focus {
 #restaurant-hours time {
   display: block;
 }
+
+.hide {
+  display: none;
+}
   </style>
-  <link rel="stylesheet" href="css/styles-29.css" media="screen and (min-width: 29em)">
-  <link rel="stylesheet" href="css/styles-35.css" media="screen and (min-width: 35em)">
-  <link rel="stylesheet" href="css/styles-45.css" media="screen and (min-width: 45em)">
-  <link rel="stylesheet" href="css/styles-54.css" media="screen and (min-width: 54em)">
-  <link rel="stylesheet" href="css/styles-68.css" media="screen and (min-width: 68em)">
+  <link rel="stylesheet" href="css/styles-29.css" media="screen and (min-width: 29em) and (max-width: 34.99999em)">
+  <link rel="stylesheet" href="css/styles-35.css" media="screen and (min-width: 35em) and (max-width: 44.99999em)">
+  <link rel="stylesheet" href="css/styles-45.css" media="screen and (min-width: 45em) and (max-width: 53.99999em)">
+  <link rel="stylesheet" href="css/styles-54.css" media="screen and (min-width: 54em) and (max-width: 67.99999em)">
+  <link rel="stylesheet" href="css/styles-68.css" media="screen and (min-width: 68em) and (max-width: 86.99999em)">
   <link rel="stylesheet" href="css/styles-87.css" media="screen and (min-width: 87em)">
 </head>
 
@@ -372,7 +473,11 @@ nav h1 a:focus {
       <!-- Beginning map -->
       <!-- moved the map container into the restaurant container, to use it in grid placement -->
       <section id="map-container" aria-hidden="true">
-        <div id="map" role="application" aria-label="map which shows the restaurants location"></div>
+        <div class="map__toggle--container">
+          <input id="map__toggle" type="checkbox">
+          <label for="map__toggle">Show map</label>
+        </div>
+        <div id="map" class="hide" role="application" aria-label="map which shows the restaurants location"></div>
       </section>
       <!-- use positioned element to avoid scrolling content under the sticky header -->
       <div id="skip-target" aria-hidden="true"></div>
@@ -384,6 +489,10 @@ nav h1 a:focus {
         <figcaption id="restaurant__image-caption"></figcaption>
       </figure>
       <p id="restaurant-cuisine"></p>
+      <div id="restaurant__is-favorite-container">
+        <input type="checkbox" name="restaurant__is-favorite" id="restaurant__is-favorite">
+        <label for="restaurant__is-favorite">This restaurant is a favorite</label>
+      </div>
       <address id="restaurant-address"></address>
       <table id="restaurant-hours"></table>
     </section>
@@ -408,7 +517,7 @@ nav h1 a:focus {
   <!-- Main javascript file -->
   <script src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8y7sHdVpkLdBksQR9UDk0me5X_IbgD8g&libraries=places&callback=initMap"></script>
+  <!--script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8y7sHdVpkLdBksQR9UDk0me5X_IbgD8g&libraries=places&callback=initMap"></script-->
   <!-- End scripts -->
 
 </body>

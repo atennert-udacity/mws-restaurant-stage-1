@@ -1,5 +1,18 @@
 /* ====================== extremly big layout ====================== */
 @media screen and (min-width: 87em) {
+  /* ====================== Map ====================== */
+  #map {
+    height: 25em;
+  }
+
+  .inside #map {
+    height: 15em;
+  }
+
+  .map__toggle--container {
+    padding-left: calc((100% - 83.7em) / 2);
+  }
+
   /* ====================== Navigation ====================== */
   #breadcrumb {
     padding-left: calc((100% - 79.5em) / 2);
@@ -7,20 +20,167 @@
 
   /* ====================== Restaurant Filtering ====================== */
   .filter-options {
+    grid-template-columns: 20em auto;
     padding-left: calc((100% - 83.7em) / 2);
+  }
+
+  .filter-options select,
+  .filter-options label {
+    width: 20em;
+  }
+
+  .filter-options h2 {
+    grid-column-end: span 2;
+  }
+
+  .filter-options label {
+    grid-row-start: 2;
   }
 
   /* ====================== Restaurant list ====================== */
   #restaurants-list {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1em;
     width: 84em;
     margin: 0 auto;
   }
 
+  #restaurants-list li {
+    justify-items: center;
+    align-items: start;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas:
+      "list-item-image"
+      "list-item-name"
+      "list-item-neighborhood"
+      "list-item-address"
+      "list-item-details";
+    border: 2px solid #ccc;
+    grid-gap: 2%;
+  }
+
+  #restaurants-list .restaurant-img {
+    grid-area: list-item-image;
+    justify-self: unset;
+    width: 100%;
+  }
+
+  #restaurants-list .restaurant-img picture {
+    /* center image and only show middle part, otherwise it gets too large comapred to the text */
+    max-height: unset;
+    overflow: unset;
+    display: block;
+    align-items: unset;
+  }
+
+
+  #restaurants-list li h1 {
+    grid-area: list-item-name;
+    text-align: center;
+    font-size: 1.5em;
+  }
+
+  #restaurants-list p,
+  #restaurants-list address {
+    text-align: center;
+    font-size: 1.1em;
+  }
+
+  #restaurants-list address {
+    grid-area: list-item-address;
+  }
+
+  #restaurants-list p {
+    grid-area: list-item-neighborhood;
+  }
+
   /* ====================== Restaurant Details ====================== */
   #restaurant-container {
-    grid-template-rows: min-content min-content 17em min-content min-content 1fr;
+    display: grid;
+    grid-template-columns: 4fr minmax(max-content, 2fr);
+    grid-template-rows: min-content min-content min-content min-content min-content 1fr;
+    grid-template-areas:
+      "skip-target skip-target"
+      "restaurant-name restaurant-name"
+      "restaurant-image restaurant-map"
+      "restaurant-image restaurant-is-favorite"
+      "restaurant-image restaurant-address"
+      "restaurant-image restaurant-hours"
+      "restaurant-cuisine restaurant-hours";
+    grid-column-gap: 1em;
+    padding: 10px 20px 20px;
+    border-top: 1px solid #fff;
+  }
+
+  .inside #skip-target {
+    grid-area: skip-target;
+  }
+
+  .inside #map-container {
+    grid-area: restaurant-map;
+    align-self: stretch;
+    margin: 0 0 1em;
+    border: 1px solid #ddd;
+  }
+
+  .inside #map {
+    height: 17em;
+  }
+
+  #restaurant-name {
+    grid-area: restaurant-name;
+    margin: 15px 0;
   }
   
+  #restaurant__image-container,
+  #restaurant-cuisine {
+    align-self: start;
+    margin: 0;
+    width: 100%;
+  }
+  
+  #restaurant-address,
+  #restaurant__is-favorite-container,
+  #restaurant-hours {
+    justify-self: center;
+    padding: 0;
+  }
+
+  #restaurant__image-container {
+    grid-area: restaurant-image;
+  }
+
+  #restaurant-cuisine {
+    grid-area: restaurant-cuisine;
+  }
+
+  #restaurant__is-favorite-container {
+    grid-area: restaurant-is-favorite;
+  }
+
+  #restaurant-address {
+    grid-area: restaurant-address;
+  }
+
+  #restaurant-hours {
+    grid-area: restaurant-hours;
+  }
+
+  .restaurant-hours__caption {
+    text-align: center;
+  }
+
+  #reviews-list {
+    column-count: 2;
+    column-gap: 1.5em;
+  }
+
+  .review,
+  .review__form-container {
+    break-inside: avoid-column;
+  }
+
   #restaurant-container,
   #reviews-container {
     width: 86em;

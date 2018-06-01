@@ -2,7 +2,8 @@ let restaurants,
   neighborhoods,
   cuisines,
   map,
-  markers = [];
+  markers = [],
+  mapScriptAdded = false;
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -36,6 +37,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
   });
 });
+
+const mapToggle = document.getElementById('map__toggle');
+mapToggle.onchange = (event) => {
+  const map = document.getElementById('map');
+  if (mapToggle.checked) {
+    map.className = '';
+    if (!mapScriptAdded) {
+      const mapScript = document.createElement('script');
+      mapScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyC8y7sHdVpkLdBksQR9UDk0me5X_IbgD8g&libraries=places&callback=initMap';
+      mapScript.async = true;
+      mapScript.defer = true;
+      document.body.appendChild(mapScript);
+      mapScriptAdded = true;
+    }
+  } else {
+    map.className = 'hide';
+  }
+};
 
 /**
  * Fetch all neighborhoods and set their HTML.

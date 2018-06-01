@@ -1,5 +1,5 @@
 /* ====================== small layout ====================== */
-@media screen and (min-width: 29em) {
+@media screen and (min-width: 29em) and (max-width: 34.99999em) {
   /* ====================== Map ====================== */
   #map {
     height: 19em;
