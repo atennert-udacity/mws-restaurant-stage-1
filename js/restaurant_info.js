@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
   });
 
+  // get notification from service worker to reload reviews after submission
   if (navigator.serviceWorker) {
     navigator.serviceWorker.addEventListener('message', (event) => {
       if (event.data === 'updateReviews') {
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 });
 
+// register handler for post loading map content
 const mapToggle = document.getElementById('map__toggle');
 mapToggle.onchange = (event) => {
   const map = document.getElementById('map');
@@ -275,6 +277,9 @@ createReviewHTML = (review) => {
   return li;
 }
 
+/**
+ * Create the form field.
+ */
 createReviewForm = () => {
   const li = document.createElement('li');
   li.className = 'review__form-container';

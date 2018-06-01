@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 });
 
+// register handler for post loading map content
 const mapToggle = document.getElementById('map__toggle');
 mapToggle.onchange = (event) => {
   const map = document.getElementById('map');

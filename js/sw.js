@@ -168,6 +168,9 @@ removeMessagesFromOutbox = () => {
     .catch((error) => console.warn(`encountered database problem when trying to delete outbox contents`, error.message));
 };
 
+/**
+ * Push received data to the database.
+ */
 setDbData = (storeName, data) => {
   return database()
     .then((db) => {
@@ -182,6 +185,9 @@ setDbData = (storeName, data) => {
     });
 };
 
+/**
+ * Get the database.
+ */
 database = () => {
   if (_database) {
     return Promise.resolve(_database);

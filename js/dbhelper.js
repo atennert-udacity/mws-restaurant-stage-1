@@ -152,6 +152,11 @@ class DBHelper {
     return restaurant;
   }
 
+  /**
+   * Fetch the reviews from the server or the database.
+   * @param {*} callback 
+   * @param {*} id 
+   */
   static fetchReviews(callback, id) {
     let internalCallback = callback;
     DBHelper.getDbReviews(id)
